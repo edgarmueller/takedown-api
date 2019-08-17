@@ -1,5 +1,3 @@
-import Tag from './tag';
-
 const link = (sequelize, DataTypes) => {
   const Link = sequelize.define('link', {
     url: {
@@ -20,7 +18,13 @@ const link = (sequelize, DataTypes) => {
         }
       }
     },
+    thumbnailId: {
+      type: DataTypes.STRING,
+    },
     done: {
+      type: DataTypes.BOOLEAN
+    },
+    deleted: {
       type: DataTypes.BOOLEAN
     }
   });

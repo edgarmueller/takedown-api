@@ -17,7 +17,7 @@ export default gql`
   }
 
   extend type Mutation {
-    createLink(url: String!, title: String!, tags: [String]): Link!
+    createLink(url: String!, tags: [String]): Link!
     addTag(id: ID!, tag: String): Link!
     setTags(id: ID!, tags: [String]!): Link!
     deleteLink(id: ID!): Boolean!
@@ -34,6 +34,7 @@ export default gql`
     user: User!
     done: Boolean
     tags: [String]
+    thumbnailId: String
   }
 
   extend type Subscription {

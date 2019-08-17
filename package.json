@@ -4,7 +4,7 @@
   "description": "tkdwn server",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --exec babel-node src/index.js",
+    "start": "nodemon --inspect --exec babel-node src/index.js",
     "test-server": "TEST_DATABASE=mytestdatabase npm start",
     "test": "mocha --require @babel/register 'src/**/*.spec.js'",
     "heroku-prebuild": "export NPM_CONFIG_PRODUCTION=false; export NODE_ENV=; NPM_CONFIG_PRODUCTION=false NODE_ENV=development npm install --only=dev --dev",
@@ -27,18 +27,24 @@
     "apollo-server": "^2.4.8",
     "apollo-server-express": "^2.4.8",
     "bcrypt": "^3.0.6",
+    "cloudinary": "^1.14.0",
     "cors": "^2.8.5",
     "dataloader": "^1.4.0",
+    "dom-parser": "^0.1.6",
     "dotenv": "^7.0.0",
     "express": "^4.16.4",
     "graphql": "^14.2.1",
     "graphql-iso-date": "^3.6.1",
     "graphql-resolvers": "^0.3.2",
+    "jimp": "^0.6.4",
+    "js-crawler": "^0.3.21",
     "jsonwebtoken": "^8.5.1",
     "passport": "^0.4.0",
     "passport-google-token": "^0.1.2",
     "pg": "^7.10.0",
     "sequelize": "^5.7.6",
-    "uuid": "^3.3.2"
+    "url": "^0.11.0",
+    "uuid": "^3.3.2",
+    "webshot": "^0.18.0"
   }
 }

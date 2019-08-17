@@ -2,11 +2,33 @@ import { combineResolvers } from 'graphql-resolvers'
 import { Sequelize } from 'sequelize';
 import { isAuthenticated, isLinkOwner } from './auth'
 import pubsub, { EVENTS } from '../subscription';
+import { get, fetchTitle } from '../quickshot'
+const cloudinary = require('cloudinary').v2
 
 const toCursorHash = string => Buffer.from(string).toString('base64');
 
 const fromCursorHash = string =>
   Buffer.from(string, 'base64').toString('ascii');
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+function uploadStream(fileBuffer, options) {
+  return new Promise((resolve, reject) => {
+    // Sadly, this method does not support async/await
+    cloudinary.uploader.upload_stream(options, (error, result) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(result);
+      }
+    }).end(fileBuffer);
+  })
+}
+
 
 export default {
     Query: {
@@ -37,9 +59,8 @@ export default {
                     pageInfo: {
                         hasNextPage,
                         endCursor: links.length === 0 ?
-                            null : toCursorHash(
-                                links[links.length - 1].createdAt.toString()
-                            )
+                            null : 
+                            toCursorHash(links[links.length - 1].createdAt.toString())
                     }
                 }
             }),
@@ -50,24 +71,36 @@ export default {
     Mutation: {
         createLink: combineResolvers(
             isAuthenticated,
-            async (parent, { url, tags, title }, { me, models }) => {
-                //const tags = await models.Tag.bulkCreate({
-                //    tags,
-                //    userId: me.id
-                //});
+            async (parent, { url, tags }, { me, models }) => {
                 tags = tags.map(t => ({ name: t, userId: me.id }))
-                const link = await models.Link.create({
-                    url,
-                    userId: me.id,
-                    tags,
-                    title
-                }, { include: [models.Tag] } );
 
-                pubsub.publish(EVENTS.LINK.CREATED, {
-                    linkCreated: { link }
-                })
+                const pageTitle = await fetchTitle(url);
 
-                return link;
+                const resp = await new Promise((resolve, reject) => {
+                    get(url, async function (err, data) {
+                        if (err) {
+                            reject(data);
+                        }
+                        const resp = await uploadStream(
+                            data,
+                            {
+                                resource_type: "image",
+                                // TODO 
+                                overwrite: true
+                            }
+                        );
+                        const link = await models.Link.create({
+                            url,
+                            userId: me.id,
+                            tags,
+                            title: pageTitle,
+                            thumbnailId: resp.public_id
+                        }, { include: [models.Tag] });
+                        pubsub.publish(EVENTS.LINK.CREATED, { linkCreated: { link } });
+                        resolve(link);
+                    });
+                });
+                return resp;
             }
         ),
 
@@ -81,8 +114,6 @@ export default {
                     const tags = link.tags;
                     link.setTags([...tags, newTag]);
                     return link
-                    //const res = await models.Link.Tags.updateAttributes({ tags: link.tags.concat([tag]) })
-                    //const res = await models.Link.update({ tags: link.tags.concat([tag]) }, { where: { id }})
                 }
             }
         ),
@@ -95,20 +126,16 @@ export default {
                 const foundTags = await Promise.all(tags.map(tag => models.Tag.findOne({ where: { name: tag }})));
                 const existingTags = foundTags.filter(t => !!t).map(t => t.name);
                 const newTag = tags.filter(t => !existingTags.includes(t))
-                console.log('waaaaaaaaaaaaaaaaaaat', newTag)
-                let x
+                let tag
                 if (newTag.length > 0) {
-                    x = await models.Tag.create({ name: newTag[0], userId: me.id })
+                    tag = await models.Tag.create({ name: newTag[0], userId: me.id })
                 }
                 if (link) {
-                    console.log('new tag??', x)
-                    if (x) {
-                        link.setTags([...foundTags.filter(t => !!t).map(t => t.id), x.id]);
+                    if (tag) {
+                        link.setTags([...foundTags.filter(t => !!t).map(t => t.id), tag.id]);
                     } else {
-                        console.log("??????????????????????????????????????????????????")
                         link.setTags([...foundTags.filter(t => !!t).map(t => t.id)]);
                     }
-                    console.log("!!!!!!!!!!!!!la,", link)
                     return link;
                 }
             }
@@ -126,8 +153,6 @@ export default {
             isAuthenticated,
             isLinkOwner,
             async (parent, { done, id }, { models }) => {
-                console.log('id', id)
-                console.log('done', done)
                 const [link, instances] =  await models.Link.update({ done }, { where: { id }, returning: true, plain: true });
                 return instances;
             }
@@ -140,22 +165,14 @@ export default {
         tags: async (link, args, { models }) => {
             const t =  await models.Tag.findAll({
                 include: [{
-                    //model: models.Link,
-                    //through: {
-                    //    where: {
-                    //        linkId: link.id
-                    //    }
-                    //}
                     model: models.Link,
                     through: 'linktags',
                     where: {
                         id: link.id
                     }
-                    //}
                 }]
             });
             return t.map(({name}) => name)
-            //return t.filter(t => { return t && t.links && t.links.length > 0 && t.links[0].id === link.id }).map(({ name }) => name)
         }
     },
     Subscription: {
