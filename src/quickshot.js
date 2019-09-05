@@ -84,10 +84,8 @@ function get(url, callback) {
 
           // respond to all pending callbacks and update the cache with data
           renderStream.on( 'end', function () {
-            console.log( 'jimp read' )
             Jimp.read( Buffer.from( buffer, 'binary' ) )
             .then( function ( image ) {
-              console.log( 'jimp then' )
 
               if ( !cash ) {
                 return console.log( 'error on finished webshot - no cash' )
@@ -194,12 +192,14 @@ function removeSpecials(str) {
 async function fetchTitle(url) {
   const parser = new DomParser();
   const titlePromise = new Promise((resolve, reject) => {
-    new Crawler().crawl(url, page => {
+    new Crawler()
+    .configure({ depth: 1 })
+    .crawl(url, page => {
       const dom = parser.parseFromString(page.content)
       let title = dom.getElementsByTagName("title");
-      if (title.length >= 1) {
+      if (title && title.length >= 1) {
         title = title[0].textContent
-      } else if (title.length === 0) {
+      } else if (title === null || title.length === 0) {
         title = "no title"
       } 
       resolve(removeSpecials(title));
