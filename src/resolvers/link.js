@@ -1,5 +1,5 @@
 import { combineResolvers } from 'graphql-resolvers'
-import { Sequelize } from 'sequelize';
+import { Sequelize, Op } from 'sequelize';
 import { isAuthenticated, isLinkOwner } from './auth'
 import pubsub, { EVENTS } from '../subscription';
 import { get, fetchTitle } from '../quickshot'
@@ -35,17 +35,24 @@ export default {
         links: combineResolvers(
             isAuthenticated,
             async (parent, { cursor, limit = 100 }, { models, me }) => {
+                const where = {
+                  userId: me.id,
+                  //[Op.or]: [
+                  //    { deleted: false },
+                  //    { deleted: {
+                  //        [Op.eq]: null
+                  //    } },
+                  //]
+                };
                 const cursorOpts = cursor ?
                     {
                         where: {
                             createdAt: {
                                 [Sequelize.Op.lt]: fromCursorHash(cursor)
                             },
-                            userId: me.id
+                            ...where
                         }
-                    } : {
-                        where: { userId: me.id }
-                    };
+                    } : { where };
                 const links = await models.Link.findAll({
                     order: [['createdAt', 'DESC']],
                     limit: limit + 1,
@@ -144,8 +151,9 @@ export default {
         deleteLink: combineResolvers(
             isAuthenticated,
             isLinkOwner,
-            async (parent, { id }, { models }) => {
-                return await models.Link.destroy({ where: { id } });
+            async (parent, { id, deleted }, { models }) => {
+                await models.Link.update({ deleted }, { where: { id }, returning: true, plain: true });
+                return true;
             }
         ),
 

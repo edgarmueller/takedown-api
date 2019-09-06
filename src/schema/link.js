@@ -20,7 +20,7 @@ export default gql`
     createLink(url: String!, tags: [String]): Link!
     addTag(id: ID!, tag: String): Link!
     setTags(id: ID!, tags: [String]!): Link!
-    deleteLink(id: ID!): Boolean!
+    deleteLink(id: ID!, deleted: Boolean): Boolean!
     complete(id: ID!, done: Boolean): Link!
   }
 
@@ -35,6 +35,7 @@ export default gql`
     done: Boolean
     tags: [String]
     thumbnailId: String
+    deleted: Boolean
   }
 
   extend type Subscription {
