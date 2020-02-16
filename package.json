@@ -18,7 +18,7 @@
     "@babel/node": "^7.2.2",
     "@babel/preset-env": "^7.4.3",
     "@babel/register": "^7.4.4",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "chai": "^4.2.0",
     "mocha": "^6.1.4",
     "nodemon": "^1.18.11"
@@ -42,7 +42,7 @@
     "passport": "^0.4.0",
     "passport-google-token": "^0.1.2",
     "pg": "^7.10.0",
-    "sequelize": "^5.7.6",
+    "sequelize": "^5.21.4",
     "url": "^0.11.0",
     "uuid": "^3.3.2",
     "webshot": "^0.18.0"
