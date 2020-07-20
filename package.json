@@ -24,8 +24,8 @@
     "nodemon": "^2.0.3"
   },
   "dependencies": {
-    "apollo-server": "^2.4.8",
-    "apollo-server-express": "^2.4.8",
+    "apollo-server": "^2.16.0",
+    "apollo-server-express": "^2.16.0",
     "bcrypt": "^3.0.6",
     "cloudinary": "^1.14.0",
     "cors": "^2.8.5",
