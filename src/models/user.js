@@ -63,16 +63,12 @@ const user = (sequelize, DataTypes) => {
     { accessToken, refreshToken, profile },
   ) => {
 
-    console.log("PROFILE ", profile)
     let user = await User.findBySocialProviderId({ 
       socialProvider: 'social.googleProvider', 
       providerId: profile.id
     });
 
-    console.log("found user", user)
-
     if (!user) {
-      console.log("User not found, creating...")
       user = await User.create({
         username: profile.displayName || $`${profile.familyName} ${profile.givenName}`,
         email: profile.emails[0].value,
@@ -101,8 +97,6 @@ const user = (sequelize, DataTypes) => {
   };
 
   User.findBySocialProviderId = async function({ socialProvider, providerId }) {
-    console.log('social provider ', socialProvider)
-    console.log('provider id', providerId)
     return await User.findOne({
       where: {
         socialProvider: socialProvider || null,

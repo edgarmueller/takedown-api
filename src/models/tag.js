@@ -14,10 +14,6 @@ const tag = (sequelize, DataTypes) => {
     },
   });
 
-//    Link.associate = models => {
-//    Link.Tags = Link.belongsToMany(models.Tag, { through: 'linktags' });
-//    Link.User = Link.belongsTo(models.User);
-//  };
   Tag.associate = models => {
     Tag.Link = Tag.belongsToMany(models.Link, { through: 'linktags' });
     Tag.User = Tag.belongsTo(models.User);

@@ -37,12 +37,6 @@ export default {
             async (parent, { cursor, limit = 100 }, { models, me }) => {
                 const where = {
                   userId: me.id,
-                  //[Op.or]: [
-                  //    { deleted: false },
-                  //    { deleted: {
-                  //        [Op.eq]: null
-                  //    } },
-                  //]
                 };
                 const cursorOpts = cursor ?
                     {

@@ -48,11 +48,9 @@ export default {
             try {
                 // data contains the accessToken, refreshToken and profile from passport
                 const { data, info } = await authenticateGoogle(req, res);
-                console.log('>>>>>>> data ', data)
                 if (data) {
                     const user = await models.User.upsertGoogleUser(data);
 
-                    console.log('>>>>>>> user ', user)
                     if (user) {
                         return ({
                             name: user.dataValues.username,

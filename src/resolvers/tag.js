@@ -1,6 +1,5 @@
 import { combineResolvers } from 'graphql-resolvers'
-import { Sequelize } from 'sequelize';
-import { isAuthenticated, isLinkOwner, isTagOwner } from './auth'
+import { isAuthenticated, isTagOwner } from './auth'
 import pubsub, { EVENTS } from '../subscription';
 
 export default {
@@ -28,8 +27,6 @@ export default {
                     name,
                     userId: me.id,
                 });
-
-                console.log(">>>>>>>>>>>>>>", tag)
 
                 pubsub.publish(EVENTS.TAG.CREATED, {
                     tagCreated: { tag }
