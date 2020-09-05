@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon --inspect --exec babel-node src/index.js",
     "test-server": "TEST_DATABASE=mytestdatabase npm start",
-    "test": "mocha --require @babel/register 'src/**/*.spec.js'",
+    "test": "jest",
     "heroku-prebuild": "export NPM_CONFIG_PRODUCTION=false; export NODE_ENV=; NPM_CONFIG_PRODUCTION=false NODE_ENV=development npm install --only=dev --dev",
     "heroku-postbuild": "export NPM_CONFIG_PRODUCTION=true; export NODE_ENV=production;"
   },
@@ -20,6 +20,7 @@
     "@babel/register": "^7.4.4",
     "axios": "^0.18.1",
     "chai": "^4.2.0",
+    "jest": "^26.4.2",
     "mocha": "^7.1.2",
     "nodemon": "^2.0.3"
   },
