@@ -40,7 +40,12 @@ import config from './config';
         url: configService.get('database.url'),
         entities: [User, RefreshToken],
         synchronize: false,
-        ssl: false,
+        ssl: configService.get<boolean>('database.ssl'),
+        extra: {
+          ssl: {
+            rejectUnauthorized: false,
+          },
+        },
       }),
     }),
     GraphQLModule.forRoot({
