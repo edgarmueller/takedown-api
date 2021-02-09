@@ -1,0 +1,15 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Link {
+  url: String!
+  title: String!
+  thumbnailId: String!
+  done: Boolean!
+  deleted: Boolean!
+}
+
+type Query {
+  links: [Link!]!
+}

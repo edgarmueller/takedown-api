@@ -1,3 +1,8 @@
 {
-  "debug.node.autoAttach": "off"
+  "debug.node.autoAttach": "off",
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#4D1F23",
+    "titleBar.activeBackground": "#6B2C31",
+    "titleBar.activeForeground": "#FEFBFC"
+  }
 }
