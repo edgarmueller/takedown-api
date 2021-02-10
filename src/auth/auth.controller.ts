@@ -69,7 +69,7 @@ export class AuthController {
     const accessTokenCookie = `Authentication=${jwt}; HttpOnly; Path=/; Max-Age=${this.configService.get(
       'auth.jwt.accessToken.expiresIn',
     )}`;
-    res.cookie('Authentication', accessTokenCookie);
+    res.setHeader('Set-Cookie', [accessTokenCookie]);
     res.end();
   }
 }
