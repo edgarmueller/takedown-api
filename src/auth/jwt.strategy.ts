@@ -32,9 +32,9 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
 
       // if (!validClaims)
       //   return done(new UnauthorizedException('invalid token claims'), false);
-      return this.userService.findOneByIdOrFail(payload.sub);
+      return await this.userService.findOneByIdOrFail(payload.sub);
     } catch (err) {
-      throw new UnauthorizedException('unauthorized', err.message);
+      throw new UnauthorizedException();
     }
   }
 }
