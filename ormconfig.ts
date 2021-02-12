@@ -13,11 +13,11 @@ const options = {
     migrationsDir: join(__dirname, './src/db/migrations'),
   },
   logging: ['error'],
-  ssl: true,
+  ssl: false,
   extra: {
-    ssl: {
-      rejectUnauthorized: false,
-    },
+    //ssl: {
+    //  rejectUnauthorized: false,
+    //},
   },
 };
 

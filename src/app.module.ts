@@ -13,7 +13,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/user.entity';
 import { RefreshToken } from './auth/refresh-token.entity';
 import config from './config';
-
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -35,18 +34,23 @@ import config from './config';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        url: configService.get('database.url'),
-        entities: [User, RefreshToken],
-        synchronize: false,
-        ssl: configService.get<boolean>('database.ssl'),
-        extra: {
-          ssl: {
-            rejectUnauthorized: false,
+      useFactory: (configService: ConfigService) => {
+        const isSslEnabled = configService.get('database.ssl') === 'true';
+        return {
+          type: 'postgres',
+          url: configService.get('database.url'),
+          entities: [User, RefreshToken],
+          synchronize: false,
+          ssl: isSslEnabled,
+          extra: {
+            ...(isSslEnabled && {
+              ssl: {
+                rejectUnauthorized: false,
+              },
+            }),
           },
-        },
-      }),
+        };
+      },
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: 'schema.gql',
