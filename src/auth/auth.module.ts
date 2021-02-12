@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from '../user/user.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { GoogleController } from './google.controller';
 import { GoogleStrategy } from './google.strategy';
 import { JwtRefreshTokenStrategy } from './jwt-refresh.strategy';
 import { JwtStrategy } from './jwt.strategy';
@@ -31,6 +32,6 @@ import { RefreshToken } from './refresh-token.entity';
     JwtStrategy,
     JwtRefreshTokenStrategy,
   ],
-  controllers: [AuthController],
+  controllers: [AuthController, GoogleController],
 })
 export class AuthModule {}
