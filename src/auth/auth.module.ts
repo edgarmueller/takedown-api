@@ -7,6 +7,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { GoogleController } from './google.controller';
 import { GoogleStrategy } from './google.strategy';
+import { GraphqlJwtGuard } from './graphql-jwt.guard';
 import { JwtRefreshTokenStrategy } from './jwt-refresh.strategy';
 import { JwtStrategy } from './jwt.strategy';
 import { RefreshToken } from './refresh-token.entity';
@@ -31,6 +32,7 @@ import { RefreshToken } from './refresh-token.entity';
     GoogleStrategy,
     JwtStrategy,
     JwtRefreshTokenStrategy,
+    GraphqlJwtGuard,
   ],
   controllers: [AuthController, GoogleController],
 })

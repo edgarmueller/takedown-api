@@ -1,11 +1,11 @@
 import { parse } from 'url';
-const fs = require('fs');
-var webshot = require('webshot');
-var Jimp = require('jimp');
-var Crawler = require('js-crawler');
-var DomParser = require('dom-parser');
+import fs from 'fs';
+import webshot from 'node-webshot';
+import Jimp from 'jimp';
+import Crawler from 'js-crawler';
+import DomParser from 'dom-parser';
 
-var webshotSettings = {
+const webshotSettings = {
   // eslint-disable-line
   screenSize: {
     width: 1080,
@@ -18,11 +18,11 @@ var webshotSettings = {
   },
 };
 
-var cache = {};
-var cacheList = [];
-var cacheLimit = 100;
-var listenersLimit = 300;
-var cacheTimeoutInterval = 10000; // 10 seconds
+const cache = {};
+const cacheList = [];
+const cacheLimit = 100;
+const listenersLimit = 300;
+const cacheTimeoutInterval = 10000; // 10 seconds
 
 String.prototype.startsWith = function(str) {
   // eslint-disable-line
@@ -39,7 +39,16 @@ function handleError(cash, err) {
   cache[cash.hostpath] = null;
 }
 
-function get(url, callback) {
+export const takeShot = url => {
+  return new Promise((resolve, reject) => {
+    makeShot(url, (err, data) => {
+      if (err) return reject(err);
+      resolve(data);
+    });
+  });
+};
+
+function makeShot(url, callback) {
   if (!url.startsWith('http') && !url.startsWith('//')) {
     url = '//' + url;
   }
@@ -81,7 +90,7 @@ function get(url, callback) {
           // kill the litener callbacks and reset the cache
           handleError(err, cash);
         } else {
-          var buffer = '';
+          let buffer = '';
 
           // gather the data
           renderStream.on('data', function(data) {
@@ -143,7 +152,7 @@ function get(url, callback) {
 }
 
 // clean cache every 10 seconds
-var cacheTimeout = null;
+let cacheTimeout = null;
 function cleanCache() {
   if (cacheTimeout) {
     clearTimeout(cacheTimeout);
@@ -152,9 +161,9 @@ function cleanCache() {
 
   // clean cache
   if (cacheList.length > cacheLimit) {
-    var removeList = cacheList.slice(cacheLimit);
-    for (var i = 0; i < removeList.length; i++) {
-      var cash = removeList[i];
+    const removeList = cacheList.slice(cacheLimit);
+    for (let i = 0; i < removeList.length; i++) {
+      const cash = removeList[i];
       if (!cash) continue;
       if (cash.listeners instanceof Array) {
         cash.listeners.map(function(val, ind, arr) {
@@ -222,9 +231,3 @@ async function fetchTitle(url) {
   });
   return titlePromise;
 }
-
-module.exports = {
-  get: get,
-  base64_encode,
-  fetchTitle,
-};

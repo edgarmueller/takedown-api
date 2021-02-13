@@ -18,6 +18,11 @@ export default () => ({
       callbackUrl: process.env.GOOGLE_CLIENT_CALLBACK_URL,
     },
   },
+  cloudinary: {
+    cloudName: process.env.CLOUDINARY_CLOUD_NAME,
+    apiKey: process.env.CLOUDINARY_API_KEY,
+    apiSecret: process.env.CLOUDINARY_API_SECRET,
+  },
   database: {
     url: process.env.DATABASE_URL,
     ssl: process.env.DATABASE_USE_SSL,

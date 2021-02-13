@@ -5,7 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from '@hapi/joi';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { LinkModule } from './link/link.module';
+import { BookmarkModule } from './bookmark/bookmark.module';
 import { TagModule } from './tag/tag.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
@@ -13,6 +13,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/user.entity';
 import { RefreshToken } from './auth/refresh-token.entity';
 import config from './config';
+import { Bookmark } from './bookmark/bookmark.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -39,7 +40,7 @@ import config from './config';
         return {
           type: 'postgres',
           url: configService.get('database.url'),
-          entities: [User, RefreshToken],
+          entities: [User, RefreshToken, Bookmark],
           synchronize: false,
           ssl: isSslEnabled,
           extra: {
@@ -55,7 +56,7 @@ import config from './config';
     GraphQLModule.forRoot({
       autoSchemaFile: 'schema.gql',
     }),
-    LinkModule,
+    BookmarkModule,
     TagModule,
     UserModule,
     AuthModule,
