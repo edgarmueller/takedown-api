@@ -10,7 +10,7 @@ const options = {
   migrations: [join(__dirname, './src/db/migrations/*.{ts,js}')],
   synchronize: false,
   cli: {
-    migrationsDir: join(__dirname, './src/db/migrations'),
+    migrationsDir: 'src/db/migrations',
   },
   logging: ['error'],
   ssl: false,
