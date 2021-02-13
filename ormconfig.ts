@@ -13,11 +13,13 @@ const options = {
     migrationsDir: 'src/db/migrations',
   },
   logging: ['error'],
-  ssl: false,
+  ssl: process.env.DATABASE_USE_SSL === 'true',
   extra: {
-    //ssl: {
-    //  rejectUnauthorized: false,
-    //},
+    ...(process.env.DATABASE_USE_SSL === 'true' && {
+      ssl: {
+        rejectUnauthorized: false,
+      },
+    }),
   },
 };
 
