@@ -1,4 +1,4 @@
-import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { IsNotEmpty } from 'class-validator';
 import { Request, Response } from 'express';
@@ -47,5 +47,12 @@ export class AuthController {
     )}`;
     res.setHeader('Set-Cookie', [accessTokenCookie]);
     res.end();
+  }
+
+  @Post('logout')
+  @UseGuards(JwtGuard)
+  async logOut(@Res() response: Response) {
+    response.setHeader('Set-Cookie', this.authService.getCookieForLogOut());
+    return response.sendStatus(200);
   }
 }
