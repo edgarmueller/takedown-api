@@ -15,7 +15,13 @@ export class BookmarkResolver {
   @Query(() => [GetBookmarkDto])
   async bookmarks(): Promise<GetBookmarkDto[]> {
     const bookmarks = await this.bookmarkService.find();
-    return bookmarks.map(bookmark => new GetBookmarkDto(bookmark));
+    return bookmarks.map(
+      bookmark =>
+        new GetBookmarkDto({
+          ...bookmark,
+          tags: (bookmark.tags || []).map(({ name }) => name),
+        }),
+    );
   }
 
   @Mutation(() => GetBookmarkDto)
@@ -28,7 +34,10 @@ export class BookmarkResolver {
       createBookmarkDto,
       context.req.user,
     );
-    return new GetBookmarkDto(bookmark);
+    return new GetBookmarkDto({
+      ...bookmark,
+      tags: (bookmark.tags || []).map(({ name }) => name),
+    });
   }
 
   @Mutation(() => GetDeletedBookmarkDto)

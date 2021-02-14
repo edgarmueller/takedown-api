@@ -14,6 +14,7 @@ import { User } from './user/user.entity';
 import { RefreshToken } from './auth/refresh-token.entity';
 import config from './config';
 import { Bookmark } from './bookmark/bookmark.entity';
+import { Tag } from './tag/tag.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -40,7 +41,7 @@ import { Bookmark } from './bookmark/bookmark.entity';
         return {
           type: 'postgres',
           url: configService.get('database.url'),
-          entities: [User, RefreshToken, Bookmark],
+          entities: [User, RefreshToken, Bookmark, Tag],
           synchronize: false,
           ssl: isSslEnabled,
           extra: {

@@ -10,6 +10,7 @@ import { Bookmark } from './bookmark.entity';
 import { CreateBookmarkDto } from './dto/create-bookmark.dto';
 import { takeShot } from '../common/quickshot';
 import { GetDeletedBookmarkDto } from './dto/get-deleted-bookmark.dto';
+import { TagService } from '../tag/tag.service';
 
 function removeSpecialsChars(str: string): string {
   const lower = str.toLowerCase();
@@ -59,6 +60,7 @@ function uploadStream(fileBuffer, options): Promise<any> {
 export class BookmarkService {
   constructor(
     private readonly configService: ConfigService,
+    private readonly tagService: TagService,
     @InjectRepository(Bookmark)
     private readonly bookmarkRepo: Repository<Bookmark>,
   ) {
@@ -80,18 +82,20 @@ export class BookmarkService {
       resource_type: 'image',
       overwrite: true,
     });
+    const tags = await this.tagService.findOrCreate(createBookmarkDto.tags);
     const bookmark = new Bookmark({
       url,
       userId: user.id,
       title,
       thumbnailId: thumbnailUpload.public_id,
       deleted: false,
+      tags,
     });
     return this.bookmarkRepo.save(bookmark);
   }
 
   async find(): Promise<Bookmark[]> {
-    const bookmarks = await this.bookmarkRepo.find();
+    const bookmarks = await this.bookmarkRepo.find({ relations: ['tags'] });
     return bookmarks.filter(b => !b.deleted);
   }
 

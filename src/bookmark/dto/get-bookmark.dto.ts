@@ -14,6 +14,9 @@ export class GetBookmarkDto {
   @Field()
   thumbnailId: string;
 
+  @Field(() => [String])
+  tags: string[];
+
   constructor(props: Partial<GetBookmarkDto>) {
     Object.assign(this, props);
   }

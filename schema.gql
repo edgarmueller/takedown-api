@@ -12,6 +12,7 @@ type GetBookmarkDto {
   url: String!
   title: String!
   thumbnailId: String!
+  tags: [String!]!
 }
 
 type Query {
@@ -25,6 +26,7 @@ type Mutation {
 
 input CreateBookmarkDto {
   url: String!
+  tags: [String!]
 }
 
 input DeleteBookmarkDto {

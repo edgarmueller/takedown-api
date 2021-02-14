@@ -1,4 +1,12 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Tag } from './../tag/tag.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+} from 'typeorm';
 import { BaseEntity } from '../common/base.entity';
 import { User } from '../user/user.entity';
 
@@ -27,6 +35,10 @@ export class Bookmark extends BaseEntity {
   )
   @JoinColumn({ name: 'user_id' })
   user: User;
+
+  @ManyToMany(() => Tag)
+  @JoinTable()
+  tags: Tag[];
 
   constructor(props: Partial<Bookmark>) {
     super();
