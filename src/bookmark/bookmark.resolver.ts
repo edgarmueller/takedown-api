@@ -1,3 +1,4 @@
+import { GetDeletedBookmarkDto } from './dto/get-deleted-bookmark.dto';
 import { UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphqlJwtGuard } from '../auth/graphql-jwt.guard';
@@ -5,6 +6,7 @@ import RequestWithUser from '../auth/request-with-user.interface';
 import { BookmarkService } from './bookmark.service';
 import { CreateBookmarkDto } from './dto/create-bookmark.dto';
 import { GetBookmarkDto } from './dto/get-bookmark.dto';
+import { DeleteBookmarkDto } from './dto/delete-bookmark.dto';
 
 @Resolver(() => GetBookmarkDto)
 export class BookmarkResolver {
@@ -27,5 +29,14 @@ export class BookmarkResolver {
       context.req.user,
     );
     return new GetBookmarkDto(bookmark);
+  }
+
+  @Mutation(() => GetDeletedBookmarkDto)
+  @UseGuards(GraphqlJwtGuard)
+  async deleteBookmark(@Args('input') deleteBookmarkDto: DeleteBookmarkDto) {
+    const deletedBookmarkDto = await this.bookmarkService.delete(
+      deleteBookmarkDto.bookmarkId,
+    );
+    return deletedBookmarkDto;
   }
 }

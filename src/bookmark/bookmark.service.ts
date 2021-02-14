@@ -9,6 +9,7 @@ import { User } from '../user/user.entity';
 import { Bookmark } from './bookmark.entity';
 import { CreateBookmarkDto } from './dto/create-bookmark.dto';
 import { takeShot } from '../common/quickshot';
+import { GetDeletedBookmarkDto } from './dto/get-deleted-bookmark.dto';
 
 function removeSpecialsChars(str: string): string {
   const lower = str.toLowerCase();
@@ -90,6 +91,21 @@ export class BookmarkService {
   }
 
   async find(): Promise<Bookmark[]> {
-    return this.bookmarkRepo.find();
+    const bookmarks = await this.bookmarkRepo.find();
+    return bookmarks.filter(b => !b.deleted);
+  }
+
+  async delete(bookmarkId: string): Promise<GetDeletedBookmarkDto> {
+    const bookmark = await this.bookmarkRepo.findOneOrFail(bookmarkId);
+    await this.bookmarkRepo.save(
+      new Bookmark({
+        ...bookmark,
+        deleted: true,
+      }),
+    );
+    return new GetDeletedBookmarkDto({
+      deleted: true,
+      bookmarkId,
+    });
   }
 }

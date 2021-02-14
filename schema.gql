@@ -2,14 +2,31 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Link {
+type GetDeletedBookmarkDto {
+  deleted: Boolean!
+  bookmarkId: String!
+}
+
+type GetBookmarkDto {
+  id: String!
   url: String!
   title: String!
   thumbnailId: String!
-  done: Boolean!
-  deleted: Boolean!
 }
 
 type Query {
-  links: [Link!]!
+  bookmarks: [GetBookmarkDto!]!
+}
+
+type Mutation {
+  createBookmark(input: CreateBookmarkDto!): GetBookmarkDto!
+  deleteBookmark(input: DeleteBookmarkDto!): GetDeletedBookmarkDto!
+}
+
+input CreateBookmarkDto {
+  url: String!
+}
+
+input DeleteBookmarkDto {
+  bookmarkId: String!
 }

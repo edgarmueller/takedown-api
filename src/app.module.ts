@@ -55,6 +55,10 @@ import { Bookmark } from './bookmark/bookmark.entity';
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: 'schema.gql',
+      cors: {
+        credentials: true,
+        origin: process.env.CORS_ORIGIN,
+      },
     }),
     BookmarkModule,
     TagModule,
