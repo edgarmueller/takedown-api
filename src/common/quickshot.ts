@@ -109,8 +109,8 @@ function makeShot(url, callback) {
 
                 image
                   .cover(
-                    192,
-                    108,
+                    640,
+                    480,
                     Jimp.HORIZONTAL_ALIGN_CENTER | Jimp.VERTICAL_ALIGN_TOP,
                   )
                   .getBuffer(Jimp.MIME_JPEG, function(err, imageBuffer) {
