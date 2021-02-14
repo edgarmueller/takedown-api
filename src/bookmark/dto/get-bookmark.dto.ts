@@ -17,6 +17,9 @@ export class GetBookmarkDto {
   @Field(() => [String])
   tags: string[];
 
+  @Field()
+  createdAt: string;
+
   constructor(props: Partial<GetBookmarkDto>) {
     Object.assign(this, props);
   }

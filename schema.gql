@@ -13,6 +13,7 @@ type GetBookmarkDto {
   title: String!
   thumbnailId: String!
   tags: [String!]!
+  createdAt: String!
 }
 
 type Query {

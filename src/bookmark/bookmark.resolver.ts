@@ -20,6 +20,7 @@ export class BookmarkResolver {
         new GetBookmarkDto({
           ...bookmark,
           tags: (bookmark.tags || []).map(({ name }) => name),
+          createdAt: bookmark.createdAt.toISOString(),
         }),
     );
   }
@@ -37,6 +38,7 @@ export class BookmarkResolver {
     return new GetBookmarkDto({
       ...bookmark,
       tags: (bookmark.tags || []).map(({ name }) => name),
+      createdAt: bookmark.createdAt.toISOString(),
     });
   }
 
